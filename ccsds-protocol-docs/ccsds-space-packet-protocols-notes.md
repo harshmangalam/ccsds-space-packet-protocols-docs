@@ -651,3 +651,84 @@ EPP uses PVN, protocol-identification fields, and LID to identify and extract en
 - **DTN:** Communication across disrupted networks.
 
 **Key takeaway:** SPP and EPP provide packet transfer, while additional protocols and data-link mechanisms address reliability, file delivery, prioritization, and intermittent connectivity.
+
+
+## Slide 12 – Complete CCSDS System Walkthrough
+
+### End-to-End Architecture
+
+```text
+             SPACECRAFT
+                 |
+       +---------+---------+
+       |                   |
+       v                   v
+  Housekeeping         Image File
+       |                   |
+       v                   v
+      SPP                 CFDP
+       |                   |
+       |                   v
+       |                  EPP
+       |                   |
+       +---------+---------+
+                 |
+                 v
+        CCSDS Data Link
+        (TM / AOS / USLP)
+                 |
+                 v
+          Transfer Frames
+                 |
+                 v
+          Channel Coding
+                 |
+                 v
+           RF Downlink
+                 |
+                 v
+           GROUND SYSTEM
+                 |
+                 v
+          Frame Processing
+                 |
+         +-------+-------+
+         |               |
+         v               v
+     SPP Decoder     EPP Decoder
+         |               |
+         v               v
+     Telemetry       CFDP Receiver
+     Processor           |
+                         v
+                     Image File
+```
+
+### Responsibilities
+
+| Component | Responsibility |
+|---|---|
+| Application | Generates and interprets mission data |
+| SPP | Packages and identifies application data |
+| EPP | Encapsulates upper-layer PDUs |
+| APID | Identifies a Space Packet stream |
+| Virtual Channel | Organizes data-link traffic |
+| Transfer Frame | Carries data across the space link |
+| CFDP | Provides file delivery and optional recovery |
+| Physical Layer | Transmits and receives signals |
+
+### Important Engineering Rules
+
+- **Space Packet ≠ Transfer Frame.**
+- APID identifies packet streams; VCID identifies data-link channels.
+- SPP/EPP do not provide network routing.
+- Packet delivery does not guarantee command execution.
+- SPP/EPP do not guarantee delivery or automatic retransmission.
+- Mission software defines command and telemetry formats.
+- Use the relevant CCSDS Blue Books for implementation requirements.
+
+### Final Takeaway
+
+**Application → Packet Protocol → Data Link → Physical Link → Ground Processing**
+
+Each layer has a specific responsibility. Understanding these boundaries is essential when designing or debugging satellite communication software.
